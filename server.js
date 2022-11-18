@@ -13,7 +13,7 @@ var corsOptions = {
 }
 
 // middlewares
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
