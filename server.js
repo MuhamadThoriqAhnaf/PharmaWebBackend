@@ -7,7 +7,7 @@ dotenv.config();
 const app = express()
 
 var corsOptions = {
-    origin: ["http://localhost:9000", "http://localhost:3000", "https://paw-kelompok14.vercel.app/"],
+    origin: ["http://localhost:9000", "http://localhost:3000", "https://pharma-web-front-9jdkv3ejj-anantapridya.vercel.app/"],
     credentials: true,
     // exposedHeaders: ["set-cookie"]
 }
