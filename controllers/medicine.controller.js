@@ -1,8 +1,9 @@
 const db = require('../models')
+
 const Medicine = db.medicines.Medicine
 const medicineLog = db.medicines.medicineLog
-
-module.exports = {
+const axios= require('axios')
+module.exports =  {
 
     /* .post /add, JSON { name, manufacturer, description, stock } */
     // stock & price harus sudah berupa int
@@ -171,8 +172,16 @@ module.exports = {
     /* .put /:id/log JSON { stock, description } */
     addTransactionLog(req, res) {
         const id = req.params.id
+        //id obat sebagai URL
         let log, newLog
 
+        /*
+           req.body.stock,
+           req.body.description
+           req.body.total_payment (biaya dibuat sama kamu san (biaya total))
+
+
+        */
         if ('stock' in req.body
             && typeof req.body.stock === 'number'
             && isFinite(req.body.stock)
@@ -203,7 +212,22 @@ module.exports = {
                         res.status(404).send({
                             message: `Obat dengan id ${id} tidak ditemukan`
                         })
-                    else res.send({ message: `Transaksi ditambahkan untuk obat dengan id ${id}` })
+                    else {
+                        //microservice menuju server cashflow
+                        const pemasukan = req.body.total_payment;
+                        const instansi = "Pharmacy"
+                        axios
+                        .post("http://localhost:5001/api/transaction/create", { pemasukan, instansi })
+                        .then((response) => {
+                          res.send(response.data);
+                        })
+                        .catch((error) => {
+                          console.error(error);
+                          res.status(500).send("Internal Server Error");
+                        });
+                         
+                        
+                        res.send({ message: `Transaksi ditambahkan untuk obat dengan id ${id}` })} 
                 })
 
             }).catch(() => {
